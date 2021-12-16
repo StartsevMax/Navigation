@@ -17,8 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: scene)
         window.rootViewController = TabBar(
             ViewControllers: [
-                UINavigationController(rootViewController: ViewController(.red)),
-                UINavigationController(rootViewController: ViewController(.blue))
+                UINavigationController(rootViewController: FeedViewController()),
+                UINavigationController(rootViewController: ProfileViewController())
             ]
         )
         window.makeKeyAndVisible()
