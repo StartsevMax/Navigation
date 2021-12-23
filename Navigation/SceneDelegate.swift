@@ -11,19 +11,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let scene = (scene as? UIWindowScene) else { return }
-        let window = UIWindow(windowScene: scene)
-        window.rootViewController = TabBar(
-            ViewControllers: [
-                UINavigationController(rootViewController: FeedViewController()),
-                UINavigationController(rootViewController: ProfileViewController())
-            ]
-        )
-        window.makeKeyAndVisible()
-        self.window = window
         
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        let window = UIWindow(windowScene: windowScene)
+        
+        let feedVC = FeedViewController()
+        let feedNavigationController = UINavigationController(rootViewController: feedVC)
+        feedNavigationController.navigationBar.tintColor = .label
+        
+        let profileVC = ProfileViewController()
+        let profileNavigationController = UINavigationController(rootViewController: profileVC)
+        profileNavigationController.navigationBar.tintColor = .label
+        
+        let tabBarController = UITabBarController()
+        tabBarController.setViewControllers([feedNavigationController,profileNavigationController], animated: false)
+        UITabBar.appearance().backgroundColor = .white
+        guard let items = tabBarController.tabBar.items else { return }
+        let images = ["house", "person.circle"]
+        for i in 0..<items.count {
+            items[i].image = UIImage(systemName: images[i])
+        }
+        
+        window.rootViewController = tabBarController
+        self.window = window
+        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -8,5 +8,8 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
-    
+    override func viewDidLoad() {
+        view.backgroundColor = .yellow
+        title = "Profile"
+    }
 }
