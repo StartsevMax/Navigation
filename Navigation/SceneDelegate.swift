@@ -19,11 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let feedVC = FeedViewController()
         let feedNavigationController = UINavigationController(rootViewController: feedVC)
-        feedNavigationController.navigationBar.tintColor = .label
         
         let profileVC = ProfileViewController()
         let profileNavigationController = UINavigationController(rootViewController: profileVC)
-        profileNavigationController.navigationBar.tintColor = .label
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([feedNavigationController,profileNavigationController], animated: false)
