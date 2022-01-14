@@ -9,9 +9,50 @@ import UIKit
 
 class ProfileHeaderView: UIView {
     
-    let showStatusButton: UIButton = {
+    var statusText: String = ""
+    
+    let avatarImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "the_rock"))
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 100
+        imageView.layer.borderWidth = 3
+        imageView.layer.borderColor = UIColor.white.cgColor
+        imageView.backgroundColor = .lightGray
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    let fullNameLabel: UILabel = {
+        let label = UILabel.init(frame: .zero)
+        label.text = "Hipster cat"
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        return label
+    }()
+    
+    let statusLabel: UILabel = {
+        let label = UILabel.init(frame: .zero)
+        label.text = "Waiting for something..."
+        label.numberOfLines = 0
+        label.font.withSize(14)
+        label.textColor = .gray
+        return label
+    }()
+
+    let statusTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Enter new status"
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.black.cgColor
+        textField.layer.cornerRadius = 12
+        textField.textColor = .black
+        textField.font?.withSize(15)
+        textField.backgroundColor = .white
+        textField.addTarget(self, action: #selector(statusTextChanged(_:)), for: .editingChanged)
+        return textField
+    }()
+    
+    let setStatusButton: UIButton = {
         let button = UIButton.init(frame: .zero)
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .systemBlue
         button.setTitle("Show status", for: .normal)
         button.titleLabel?.textColor = .white
@@ -23,50 +64,67 @@ class ProfileHeaderView: UIView {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
-    
-    @objc func buttonPressed() {
-        print("\(userStatus.text ?? "Status is empty")")
-    }
-    
-    let userName: UILabel = {
-        let label = UILabel.init(frame: CGRect(x: 230, y: 100, width: 100, height: 50))
-        label.text = "Hipster cat"
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        return label
-    }()
-    
-    let userStatus: UILabel = {
-        let label = UILabel.init(frame: CGRect(x: 230, y: 150, width: 100, height: 50))
-        label.text = "Waiting for something..."
-        label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .gray
-        return label
-    }()
-    
-    let avatar: UIImageView = {
-        let imageView = UIImageView(frame: CGRect(x: 16, y: 90, width: 200, height: 200))
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.image = UIImage(named: "the_rock")
-        imageView.layer.cornerRadius = imageView.frame.size.width / 2
-        imageView.layer.borderWidth = 3
-        imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.backgroundColor = .lightGray
-        imageView.clipsToBounds = true
-        return imageView
-    }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .lightGray
-        addSubview(showStatusButton)
-        addSubview(avatar)
-        addSubview(userName)
-        addSubview(userStatus)
+        setupViews()
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupViews() {
+        addSubview(avatarImageView)
+        addSubview(fullNameLabel)
+        addSubview(statusLabel)
+        addSubview(statusTextField)
+        addSubview(setStatusButton)
+    }
+    
+    func setupConstraints() {
+        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
+        fullNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        statusTextField.translatesAutoresizingMaskIntoConstraints = false
+        setStatusButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            avatarImageView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            avatarImageView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 200),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 200),
+            
+            fullNameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 27),
+            fullNameLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 232),
+            
+            statusLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 154),
+            statusLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 232),
+            
+            statusTextField.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 174),
+            statusTextField.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 232),
+            statusTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            setStatusButton.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            setStatusButton.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            setStatusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 16),
+            setStatusButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    @objc func buttonPressed() {
+        if setStatusButton.titleLabel?.text == "Set status" {
+            statusLabel.text = statusText
+            setStatusButton.titleLabel?.text = "Show status"
+        } else {
+            print("\(statusLabel.text ?? "Status is empty")")
+        }
+    }
+    
+    @objc func statusTextChanged(_ textField: UITextField) {
+        statusText = textField.text ?? ""
+        setStatusButton.setTitle("Set status", for: .normal)
     }
 }
