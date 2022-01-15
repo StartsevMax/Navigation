@@ -14,7 +14,7 @@ class ProfileHeaderView: UIView {
     let avatarImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "the_rock"))
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 100
+        imageView.layer.cornerRadius = 50
         imageView.layer.borderWidth = 3
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.backgroundColor = .lightGray
@@ -37,7 +37,7 @@ class ProfileHeaderView: UIView {
         label.textColor = .gray
         return label
     }()
-
+    
     let statusTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Enter new status"
@@ -64,7 +64,7 @@ class ProfileHeaderView: UIView {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .lightGray
@@ -85,26 +85,26 @@ class ProfileHeaderView: UIView {
     }
     
     func setupConstraints() {
-        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
-        fullNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        statusLabel.translatesAutoresizingMaskIntoConstraints = false
-        statusTextField.translatesAutoresizingMaskIntoConstraints = false
-        setStatusButton.translatesAutoresizingMaskIntoConstraints = false
+        disableAutoresizingMask(for: [avatarImageView,
+                                      fullNameLabel,
+                                      statusLabel,
+                                      statusTextField,
+                                      setStatusButton])
         
         NSLayoutConstraint.activate([
             avatarImageView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             avatarImageView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 200),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 200),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 100),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 100),
             
             fullNameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 27),
-            fullNameLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 232),
+            fullNameLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 132),
             
-            statusLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 154),
-            statusLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 232),
+            statusLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 54),
+            statusLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 132),
             
-            statusTextField.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 174),
-            statusTextField.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 232),
+            statusTextField.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 74),
+            statusTextField.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 132),
             statusTextField.heightAnchor.constraint(equalToConstant: 40),
             
             setStatusButton.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -126,5 +126,11 @@ class ProfileHeaderView: UIView {
     @objc func statusTextChanged(_ textField: UITextField) {
         statusText = textField.text ?? ""
         setStatusButton.setTitle("Set status", for: .normal)
+    }
+}
+
+extension UIView {
+    func disableAutoresizingMask(for views: [UIView]) {
+        views.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
     }
 }
